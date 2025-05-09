@@ -1,4 +1,4 @@
-# (c) adarsh-goel
+(c) adarsh-goel
 import os
 import sys
 import glob
@@ -24,20 +24,26 @@ logging.getLogger("aiohttp.web").setLevel(logging.ERROR)
 
 ppath = "Adarsh/bot/plugins/*.py"
 files = glob.glob(ppath)
-StreamBot.start()
-loop = asyncio.get_event_loop()
 
+async def start_bot():
+    try:
+        await StreamBot.start()
+    except pyrogram.errors.BadMsgNotification as e:
+        print(f"Error: {e}")
+        await asyncio.sleep(5)
+        await start_bot()
+
+loop = asyncio.get_event_loop()
 
 async def start_services():
     print('\n')
     print('------------------- Initalizing Telegram Bot -------------------')
+    await start_bot()
     bot_info = await StreamBot.get_me()
     StreamBot.username = bot_info.username
     print("------------------------------ DONE ------------------------------")
     print()
-    print(
-        "---------------------- Initializing Clients ----------------------"
-    )
+    print("---------------------- Initializing Clients ----------------------")
     await initialize_clients()
     print("------------------------------ DONE ------------------------------")
     print('\n')
@@ -70,13 +76,13 @@ async def start_services():
     print('---------------------------------------------------------------------------------------------------------')
     print('\n')
     print('----------------------- Service Started -----------------------------------------------------------------')
-    print('                        bot =>> {}'.format((await StreamBot.get_me()).first_name))
-    print('                        server ip =>> {}:{}'.format(bind_address, Var.PORT))
-    print('                        Owner =>> {}'.format((Var.OWNER_USERNAME)))
+    print(' bot =>> {}'.format((await StreamBot.get_me()).first_name))
+    print(' server ip =>> {}:{}'.format(bind_address, Var.PORT))
+    print(' Owner =>> {}'.format((Var.OWNER_USERNAME)))
     if Var.ON_HEROKU:
-        print('                        app runnng on =>> {}'.format(Var.FQDN))
+        print(' app runnng on =>> {}'.format(Var.FQDN))
     print('---------------------------------------------------------------------------------------------------------')
-    print('Give a star to my repo https://github.com/adarsh-goel/filestreambot-pro  also follow me for new bots')
+    print('Give a star to my repo https://github.com/adarsh-goel/filestreambot-pro also follow me for new bots')
     print('---------------------------------------------------------------------------------------------------------')
     await idle()
 
