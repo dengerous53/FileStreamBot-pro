@@ -1,4 +1,4 @@
-(c) adarsh-goel
+# (c) adarsh-goel
 import os
 import sys
 import glob
